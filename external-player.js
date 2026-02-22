@@ -2,7 +2,7 @@
     'use strict';
     
     const PLUGIN_NAME = 'External Player';
-    const PLUGIN_VERSION = '2.7'; // Фикс: не закрываем список серий при выборе внешнего
+    const PLUGIN_VERSION = '1.0';
     
     // Конфигурация плееров
     const PLAYERS = {
@@ -248,8 +248,6 @@
                 }
             };
         }
-        
-        showNotify(PLUGIN_NAME + ' v' + PLUGIN_VERSION);
     }
     
     if (window.appready) initPlugin();
