@@ -1,6 +1,6 @@
 # 🎬 External Player Plugin for Lampa
 
-![Version](https://img.shields.io/badge/version-2.7-blue.svg)
+![Version](https://img.shields.io/badge/version-1.0-blue.svg)
 ![Platform](https://img.shields.io/badge/platform-Lampa-lightgrey.svg)
 
 > Плагин для открытия видео потоков во внешнем плеере PotPlayer прямо из интерфейса Lampa
