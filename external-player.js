@@ -2,7 +2,7 @@
     'use strict';
     
     const PLUGIN_NAME = 'External Player';
-<<<<<<< HEAD
+    
     const PLUGIN_VERSION = '1.0';
     
     // Конфигурация плееров
