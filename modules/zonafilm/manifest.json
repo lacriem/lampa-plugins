@@ -1,17 +1,16 @@
 {
   "id": "zonafilm",
   "name": "ZonaFilm",
-  "version": "0.5.2",
+  "version": "0.1.0",
   "author": "opencode",
-  "description": "Модуль для zonafilm.tv — поиск и просмотр фильмов и сериалов",
   "content_types": ["movie", "serial"],
   "quality": "FHD",
   "languages": ["ru"],
-  "tags": ["movies", "series", "dle"],
+  "tags": ["movies", "series"],
   "config_schema": [
     {
       "key": "host",
-      "label": "ZonaFilm домен",
+      "label": "Host",
       "type": "string",
       "default": "https://zonafilm.tv"
     }
