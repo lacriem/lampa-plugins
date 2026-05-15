@@ -1,5 +1,6 @@
 var TMDB_KEY = '8c5a232a2a570dfa780613fb54ea9c34';
 var UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+var TMDB_IMG = 'https://image.tmdb.org/t/p/w342';
 
 function cfg(inv, k) {
   var v = inv.config && inv.config[k];
@@ -252,8 +253,6 @@ function resolveByImdb(inv, imdbId) {
   cache.set(key, null, 86400);
   return null;
 }
-
-var TMDB_IMG = 'https://image.tmdb.org/t/p/w342';
 
 function getTmdbEpisodes(inv, tmdbId, seasonNum) {
   if (!tmdbId) return null;
