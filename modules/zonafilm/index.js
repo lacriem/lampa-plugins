@@ -163,9 +163,16 @@ function search(q, host) {
 function strictMatch(results, inv) {
   if (!results.length) return false;
   var year = parseInt(inv.query.year || 0, 10);
+  var qt = (inv.query.title || '').trim().toLowerCase();
+  var qot = (inv.query.original_title || '').trim().toLowerCase();
   for (var i = 0; i < results.length; i++) {
     var r = results[i];
-    if (year && r.year === year) return true;
+    if (year && r.year !== year) continue;
+    var rt = r.title.toLowerCase();
+    var titleMatch = false;
+    if (qt && (rt.indexOf(qt) !== -1 || qt.indexOf(rt) !== -1)) titleMatch = true;
+    if (!titleMatch && qot && (rt.indexOf(qot) !== -1 || qot.indexOf(rt) !== -1)) titleMatch = true;
+    if (titleMatch) return true;
   }
   return false;
 }
@@ -327,8 +334,9 @@ function getVideoInfo(vkId, host, referer) {
     var data = JSON.parse(r.body || '{}');
     var result = null;
     if (data.sources && data.sources.hlsUrl) {
-      result = { url: proxy.urlWithHeaders(data.sources.hlsUrl, { Referer: referer }) };
-      console.log('zonafilm: video hls found');
+      // Return direct URL — okcdn.ru doesn't require Referer/Origin for playback
+      result = { url: data.sources.hlsUrl };
+      console.log('zonafilm: video hls found (direct)');
     } else {
       console.warn('zonafilm: no hlsUrl in video response');
     }
