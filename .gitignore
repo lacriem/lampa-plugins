@@ -1,6 +1,7 @@
 *
 !modules/
 !modules/**/*
+modules/**/*.zip
 !plugins/
 !plugins/**/*
 !README.md
