@@ -21,6 +21,18 @@ function handle(inv) {
     console.log('zonafilm: checksearch results count=' + r.length);
     var matched = strictMatch(r, inv);
     console.log('zonafilm: checksearch strictMatch=' + matched);
+    if (matched && r.length) {
+      var best = r[0];
+      var year = parseInt(inv.query.year || 0, 10);
+      for (var i = 0; i < r.length; i++) {
+        if (year && r[i].year === year) { best = r[i]; break; }
+      }
+      var extId = inv.query.id || inv.query.imdb_id || inv.query.kinopoisk_id || '';
+      if (extId) {
+        cache.set('idmap:' + extId, best.url, 600);
+        console.log('zonafilm: cached idmap ' + extId + ' -> ' + best.url);
+      }
+    }
     return matched ? { rch: true, type: 'movie', quality: 'FHD' } : { rch: false };
   }
 
@@ -29,13 +41,37 @@ function handle(inv) {
     return playStream(inv, host);
   }
 
-  var id = decodeURIComponent((inv.query.id || '').trim());
+  var rawId = decodeURIComponent((inv.query.id || '').trim());
   var seasonNum = inv.query.s;
   var episodeNum = inv.query.e;
+
+  // Try to resolve external ID (tmdb/kinopoisk) to zonafilm URL
+  var id = rawId;
+  if (rawId && rawId.indexOf('.html') === -1 && rawId.indexOf('/') !== 0) {
+    var mapped = cache.get('idmap:' + rawId);
+    if (mapped) {
+      console.log('zonafilm: resolved external id ' + rawId + ' -> ' + mapped);
+      id = mapped;
+    } else {
+      console.log('zonafilm: external id ' + rawId + ' not cached, searching by title');
+      var fallback = searchAllQueries(inv, host);
+      if (fallback.length) {
+        var fbBest = fallback[0];
+        var year = parseInt(inv.query.year || 0, 10);
+        for (var i = 0; i < fallback.length; i++) {
+          if (year && fallback[i].year === year) { fbBest = fallback[i]; break; }
+        }
+        id = fbBest.url;
+        console.log('zonafilm: fallback search resolved to ' + id);
+      }
+    }
+  }
+
   if (seasonNum && id.indexOf('|s=') === -1) id = id + '|s=' + seasonNum;
   if (episodeNum && id.indexOf('|e=') === -1) id = id + '|e=' + episodeNum;
-  if (!id) {
-    console.log('zonafilm: no id, searching for title=' + title);
+
+  if (!id || id.indexOf('.html') === -1) {
+    console.log('zonafilm: no valid id, searching for title=' + title);
     var results = searchAllQueries(inv, host);
     console.log('zonafilm: search returned ' + results.length + ' results');
     if (!results.length) return { type: 'similar', data: [] };
